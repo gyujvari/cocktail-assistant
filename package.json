@@ -1,0 +1,17 @@
+{
+  "name": "cocktail-assistant",
+  "version": "1.0.0",
+  "description": "Tiny app that helps gather a shopping list for multiple cocktails",
+  "scripts": {
+    "start": "vite",
+    "build": "vite build"
+  },
+  "dependencies": {
+    "@pionjs/pion": "^2.8.3",
+    "lighterhtml": "^4.2.0",
+    "lit-html": "^3.1.0"
+  },
+  "devDependencies": {
+    "vite": "^5.0.0"
+  }
+}
