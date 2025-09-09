@@ -46,29 +46,60 @@ function App() {
 
   const printList = () => window.print();
 
-  const containerStyle = {
-    display: "flex",
-    gap: "20px",
-    alignItems: "flex-start",
-    marginTop: "20px",
-  };
+  const containerStyle = `
+    display: flex;
+    flex-direction: row;
+    gap: 40px;
+    align-items: flex-start;
+    margin-top: 20px;
+  `;
 
-  const leftStyle = {
-    flex: 2,
-  };
+  const leftStyle = `
+    flex: 2;
+    min-width: 0;
+  `;
 
-  const rightStyle = {
-    flex: 1,
-  };
+  const rightStyle = `
+    flex: 1;
+    min-width: 200px;
+  `;
+
+  const toasterStyle = `
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: rgba(0,0,0,0.7);
+    color: white;
+    padding: 10px 15px;
+    border-radius: 8px;
+    max-width: 300px;
+    font-style: italic;
+    z-index: 999;
+  `;
+
+  const responsiveStyle = `
+    @media (max-width: 768px) {
+      .container {
+        flex-direction: column;
+      }
+      .left, .right {
+        flex: unset;
+        width: 100%;
+      }
+    }
+  `;
 
   return html`
     <div style="font-family: Arial, sans-serif; padding: 20px;">
+      <style>
+        ${responsiveStyle}
+      </style>
       ${SearchBar({ onSearch: searchCocktails })}
-      <div style=${containerStyle}>
-        <div style=${leftStyle}>
+      <div class="container" style="${containerStyle}">
+        <div class="left" style="${leftStyle}">
           ${ResultsList({ results, onAdd: addToShoppingList })}
         </div>
-        <div style=${rightStyle}>
+        <div class="right" style="${rightStyle}">
           ${ShoppingList({
             items: shoppingList,
             onRemove: removeFromShoppingList,
@@ -81,4 +112,4 @@ function App() {
   `;
 }
 
-customElements.define("my-app", component(App), { shadow: false });
+customElements.define("my-app", component(App));

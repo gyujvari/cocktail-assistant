@@ -1,52 +1,68 @@
 import { html } from "lighterhtml";
 
 export function ResultsList({ results, onAdd }) {
-  const cardStyle = {
-    border: "1px solid #e5e7eb",
-    borderRadius: "10px",
-    padding: "15px",
-    marginBottom: "12px",
-    boxShadow: "0 2px 5px rgba(0,0,0,0.05)",
-    width: "100%",
-    marginTop: "10px",
-  };
+  const containerStyle = `
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  `;
 
-  const imgStyle = {
-    borderRadius: "8px",
-    width: "30%",
-  };
+  const cardStyle = `
+    display: flex;
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+    padding: 15px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    width: 100%;
+    align-items: flex-start;
+    justify-content: space-between;
+  `;
 
-  const buttonStyle = {
-    marginTop: "8px",
-    padding: "6px 10px",
-    border: "none",
-    borderRadius: "6px",
-    background: "#10b981",
-    color: "white",
-    cursor: "pointer",
-  };
+  const imgStyle = `
+    border-radius: 8px;
+    width: 30%;
+    object-fit: cover;
+    margin-right: 15px;
+  `;
 
-  const containerStyle = {
-    display: "flex",
-    flexDirection: "column",
-    gap: "20px",
-  };
+  const contentStyle = `
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    flex: 1;
+  `;
+
+  const buttonStyle = `
+    align-self: flex-end;
+    margin-top: 10px;
+    padding: 6px 10px;
+    border: none;
+    border-radius: 6px;
+    background: #10b981;
+    color: white;
+    cursor: pointer;
+  `;
 
   return html`
-    <div style=${containerStyle}>
+    <div style="${containerStyle}">
       ${results.map(
         (drink) => html`
-          <div style=${cardStyle}>
+          <div style="${cardStyle}">
             <img
-              src=${drink.strDrinkThumb}
-              alt=${drink.strDrink}
-              style=${imgStyle}
+              src="${drink.strDrinkThumb}"
+              alt="${drink.strDrink}"
+              style="${imgStyle}"
             />
-            <h3>${drink.strDrink}</h3>
-            <p>${drink.strInstructions}</p>
-            <button style=${buttonStyle} onclick=${() => onAdd(drink.strDrink)}>
-              + Add
-            </button>
+            <div style="${contentStyle}">
+              <h3>${drink.strDrink}</h3>
+              <p>${drink.strInstructions}</p>
+              <button
+                style="${buttonStyle}"
+                onclick=${() => onAdd(drink.strDrink)}
+              >
+                + Add
+              </button>
+            </div>
           </div>
         `
       )}
