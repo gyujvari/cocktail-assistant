@@ -1,4 +1,4 @@
-import pion, { useState } from "@pionjs/pion";
+import pion, { useState, useRef } from "@pionjs/pion";
 import { html, render as lighterRender } from "lighterhtml";
 import { SearchBar } from "./SearchBar.js";
 import { ResultsList } from "./ResultsList.js";
@@ -15,13 +15,13 @@ function App() {
   const [results, setResults] = useState([]);
   const [shoppingList, setShoppingList] = useState([]);
   const [toaster, setToaster] = useState("");
+  const shoppingRef = useRef(null);
+  const API_URL = import.meta.env.VITE_COCKTAIL_API;
 
   const searchCocktails = async (term) => {
     if (!term) return;
     try {
-      const res = await fetch(
-        `https://www.thecocktaildb.com/api/json/v1/1/search.php?s=${term}`
-      );
+      const res = await fetch(`${API_URL}${term}`);
       const data = await res.json();
       setResults(data.drinks || []);
       setToaster(!data.drinks ? "No cocktails found!" : "");
@@ -44,7 +44,30 @@ function App() {
     setToaster(`${ingredient} removed`);
   };
 
-  const printList = () => window.print();
+  const printList = () => {
+    if (!shoppingRef.current) return;
+    const printWindow = window.open("", "_blank", "width=600,height=600");
+    printWindow.document.write(`
+      <html>
+        <head>
+          <title>Shopping List</title>
+          <style>
+            body { font-family: Arial, sans-serif; padding: 20px; }
+            ul { list-style: none; padding: 0; }
+            li { margin: 4px 0; display: flex; justify-content: space-between; }
+            button { display: none; }
+          </style>
+        </head>
+        <body>
+          ${shoppingRef.current.innerHTML}
+        </body>
+      </html>
+    `);
+    printWindow.document.close();
+    printWindow.focus();
+    printWindow.print();
+    printWindow.close();
+  };
 
   const containerStyle = `
     display: flex;
@@ -62,19 +85,6 @@ function App() {
   const rightStyle = `
     flex: 1;
     min-width: 200px;
-  `;
-
-  const toasterStyle = `
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    background: rgba(0,0,0,0.7);
-    color: white;
-    padding: 10px 15px;
-    border-radius: 8px;
-    max-width: 300px;
-    font-style: italic;
-    z-index: 999;
   `;
 
   const responsiveStyle = `
@@ -99,7 +109,7 @@ function App() {
         <div class="left" style="${leftStyle}">
           ${ResultsList({ results, onAdd: addToShoppingList })}
         </div>
-        <div class="right" style="${rightStyle}">
+        <div class="right" style="${rightStyle}" ref=${shoppingRef}>
           ${ShoppingList({
             items: shoppingList,
             onRemove: removeFromShoppingList,
